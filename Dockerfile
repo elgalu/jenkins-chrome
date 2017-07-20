@@ -38,5 +38,32 @@ RUN  wget -nv -O chromedriver_linux${CPU_ARCH}.zip ${CHROME_DRIVER_URL} \
   && mv chromedriver /usr/local/bin/ \
   && chromedriver --version
 
+#============================
+# Python3 with Selenium 3.3.1
+#============================
+RUN apt-get -qqy update \
+  && apt-get -qqy --no-install-recommends install \
+    python3 \
+    python3-pip \
+    python3-dev \
+    python3-openssl \
+    libssl-dev libffi-dev \
+  && pip3 install --upgrade pip \
+  && pip3 install --upgrade setuptools \
+  && pip3 install --upgrade numpy \
+  && pip3 install selenium==3.3.1 \
+  && rm -rf /var/lib/apt/lists/* \
+  && apt-get -qyy clean
+RUN cd /usr/local/bin \
+  && { [ -e easy_install ] || ln -s easy_install-* easy_install; } \
+  && ln -s idle3 idle \
+  && ln -s pydoc3 pydoc \
+  && ln -s python3 python \
+  && ln -s python3-config python-config \
+  && ln -fs /usr/bin/python3 /usr/bin/python \
+  && ln -fs /usr/bin/pip3 /usr/bin/pip \
+  && python --version \
+  && pip --version
+
 # Go back to non-sudo user
 USER jenkins
