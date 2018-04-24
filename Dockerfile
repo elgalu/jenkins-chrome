@@ -2,7 +2,7 @@
 #   docker build -t elgalu/jenkins .
 # Test:
 #   docker run --rm -ti elgalu/jenkins chromedriver --version
-#   #=> ChromeDriver 2.30.477691 (6ee44a7247c639c0703f291d320bdf05c1531b57)
+#   #=> ChromeDriver 2.3.....
 FROM jenkins
 
 # Set user root to allow us to install the rest of what's needed
@@ -26,7 +26,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub \
 # Chrome webdriver
 #==================
 # Credits to https://github.com/elgalu/docker-selenium
-ENV CHROME_DRIVER_VERSION="2.30" \
+ENV CHROME_DRIVER_VERSION="2.38" \
     CHROME_DRIVER_BASE="chromedriver.storage.googleapis.com" \
     CPU_ARCH="64"
 ENV CHROME_DRIVER_FILE="chromedriver_linux${CPU_ARCH}.zip"
@@ -38,9 +38,9 @@ RUN  wget -nv -O chromedriver_linux${CPU_ARCH}.zip ${CHROME_DRIVER_URL} \
   && mv chromedriver /usr/local/bin/ \
   && chromedriver --version
 
-#============================
-# Python3 with Selenium 3.3.1
-#============================
+#===============================
+# Python3 with Selenium bindings
+#===============================
 RUN apt-get -qqy update \
   && apt-get -qqy --no-install-recommends install \
     python3 \
@@ -48,10 +48,10 @@ RUN apt-get -qqy update \
     python3-dev \
     python3-openssl \
     libssl-dev libffi-dev \
-  && pip3 install --upgrade pip \
-  && pip3 install --upgrade setuptools \
-  && pip3 install --upgrade numpy \
-  && pip3 install selenium==3.3.1 \
+  && pip3 install --upgrade pip==9.0.3 \
+  && pip3 install setuptools \
+  && pip3 install numpy \
+  && pip3 install selenium==3.11.0 \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get -qyy clean
 RUN cd /usr/local/bin \
